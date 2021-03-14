@@ -4,6 +4,7 @@ from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CommentForm, PostForm
 from django.db.models import Q
+from django.views.generic import CreateView
 
 
 def get_author(user):
@@ -118,3 +119,9 @@ def blog_delete(request, blog_id):
     blog = get_object_or_404(Post, id=blog_id)
     blog.delete()
     return redirect("index")
+
+
+class AddCategoryView(CreateView):
+    model = Category
+    template_name = 'add_category.html'
+    fields = '__all__'

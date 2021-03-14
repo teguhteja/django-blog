@@ -29,6 +29,7 @@ urlpatterns = [
     path('blog/<int:blog_id>/update', views.blog_update, name='blog_update'),
     path('blog/<int:blog_id>/delete', views.blog_delete, name='blog_delete'),
     path('create/', views.blog_create, name='blog_create'),
+    path('add_category/', views.AddCategoryView.as_view(), name='add_category'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
