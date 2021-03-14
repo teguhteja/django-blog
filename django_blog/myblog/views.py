@@ -1,7 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 # Create your views here.
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import CommentForm
+
 
 def index(request):
     categories = Category.objects.all()
@@ -26,17 +28,28 @@ def index(request):
 
 
 def blog(request, blog_id):
+    categories = Category.objects.all()
     new_blog = get_object_or_404(Post, id=blog_id)
+    form = CommentForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.instance.user = request.user
+            form.instance.post = new_blog
+            form.save()
+            return redirect('blog', blog_id=blog_id)
     context = {
         'blog': new_blog,
+        'form': form,
     }
     return render(request, 'blog.html', context)
 
 
 def category_view(request, cats):
     category_post = Post.objects.filter(categories__title__contains=cats)
+    categories = Category.objects.all()
     context = {
         'cats': cats,
         'category_post': category_post,
+        'categories': categories,
     }
     return render(request, 'categories.html', context)
