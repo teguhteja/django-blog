@@ -23,6 +23,8 @@
 
         <!-- Date/Time -->
         <p>Posted on {{blog.date}}</p>
+        <a href="{% url 'blog_update' blog_id=blog.id %}">Update</a>
+        <a href="{% url 'blog_delete' blog_id=blog.id %}">Delete</a>
 
         <hr>
 

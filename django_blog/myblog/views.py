@@ -2,8 +2,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 # Create your views here.
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import CommentForm
+from .forms import CommentForm, PostForm
 from django.db.models import Q
+
+
+def get_author(user):
+    qs = Author.objects.filter(user=user)
+    if qs.exists():
+        return qs[0]
+    return None
+
 
 def search(request):
     queryset = Post.objects.all()
@@ -17,6 +25,7 @@ def search(request):
         'queryset': queryset
     }
     return render(request, 'search_results.html', context)
+
 
 def index(request):
     categories = Category.objects.all()
@@ -66,3 +75,46 @@ def category_view(request, cats):
         'categories': categories,
     }
     return render(request, 'categories.html', context)
+
+
+def blog_create(request):
+    title = 'Create'
+    form = PostForm(request.POST or None, request.FILES or None)
+    author = get_author(request.user)
+    if request.method == "POST":
+        if form.is_valid():
+            form.instance.author = author
+            form.save()
+            return redirect(reverse("blog", kwargs={
+                'blog_id': form.instance.id
+            }))
+    context = {
+        'title': title,
+        'form': form
+    }
+    return render(request, "post_create.html", context)
+
+
+def blog_update(request, blog_id):
+    title = 'Update'
+    blog = get_object_or_404(Post, id=blog_id)
+    form = PostForm(request.POST or None, request.FILES or None, instance=blog)
+    author = get_author(request.user)
+    if request.method == "POST":
+        if form.is_valid():
+            form.instance.author = author
+            form.save()
+            return redirect(reverse("blog", kwargs={
+                'blog_id': form.instance.id
+            }))
+    context = {
+        'title': title,
+        'form': form
+    }
+    return render(request, "post_create.html", context)
+
+
+def blog_delete(request, blog_id):
+    blog = get_object_or_404(Post, id=blog_id)
+    blog.delete()
+    return redirect("index")
