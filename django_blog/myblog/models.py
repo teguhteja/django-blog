@@ -4,6 +4,7 @@ from django.db import models
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from tinymce import HTMLField
 
 User = get_user_model()
 
@@ -23,6 +24,7 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     thumbnail = models.ImageField(null=True, blank=True)
     featured = models.BooleanField()
+    content = HTMLField(default='NO CONTENT DEFAULT SYSTEM')
 
     def __str__(self):
         return self.title
