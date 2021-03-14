@@ -37,19 +37,23 @@
         {{blog.content|safe}}
         <hr>
 
+        {% if request.user.is_authenticated %}
         <!-- Comments Form -->
         <div class="card my-4">
           <h5 class="card-header">Leave a Comment:</h5>
           <div class="card-body">
-            <form method="post", action=".">
+            <form method="POST" action=".">
               {% csrf_token %}
               <div class="form-group">
                 {{ form }}
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-secondary">Submit</button>
             </form>
           </div>
         </div>
+        {% else %}
+        <a href="{% url 'account_login' %}" class="btn btn-primary">Login to Comment</a>
+        {% endif %}
 
         <!-- Single Comment -->
         {% for comment in blog.get_comments %}

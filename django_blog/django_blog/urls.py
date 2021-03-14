@@ -30,6 +30,7 @@ urlpatterns = [
     path('blog/<int:blog_id>/delete', views.blog_delete, name='blog_delete'),
     path('create/', views.blog_create, name='blog_create'),
     path('add_category/', views.AddCategoryView.as_view(), name='add_category'),
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
