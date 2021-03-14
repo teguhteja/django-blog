@@ -17,6 +17,16 @@ class Author(models.Model):
         return self.user.username
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('index')
+
+
 class Post(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
@@ -25,6 +35,7 @@ class Post(models.Model):
     thumbnail = models.ImageField(null=True, blank=True)
     featured = models.BooleanField()
     content = HTMLField(default='NO CONTENT DEFAULT SYSTEM')
+    categories = models.ManyToManyField(Category)
 
     def __str__(self):
         return self.title
